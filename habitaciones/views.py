@@ -53,6 +53,37 @@ def delete(request, habitacion_id):
 
     return redirect('/')
 
+def edit(request, habitacion_id):
+    habitacion = get_object_or_404(Habitacion, pk=habitacion_id)
+
+    if request.method == 'POST':
+        nombre_hab = request.POST.get('txtNombre')
+        descripcion_hab = request.POST.get('txtDescripcion')
+        precio_hab = request.POST.get('txtPrecio')
+        foto_hab = request.FILES.get('txtFoto')
+
+        # Actualiza los campos de la habitación
+        habitacion.nombre = nombre_hab
+        habitacion.descripcion = descripcion_hab
+        habitacion.precio = precio_hab
+
+        if foto_hab:
+            # Elimina la foto anterior si existe
+            if habitacion.foto:
+                if os.path.exists(habitacion.foto.path):
+                    os.remove(habitacion.foto.path)
+            # Guarda la nueva foto
+            foto_hab = generate_unique_filename(foto_hab)
+            habitacion.foto = foto_hab
+
+        habitacion.save()
+        return redirect('/')
+    
+    data = {
+        'habitacion': habitacion,
+    }
+
+    return render(request, 'habitaciones/editar_habitacion.html', data)
 
 # Genera un nombre único para el archivo utilizando UUID y conserva la extensión.
 def generate_unique_filename(file):
