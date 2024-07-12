@@ -19,7 +19,11 @@
         <tr>
             <td>{{ habitacion.id}}</td>
             <td>
-                <img src="{{ habitacion.foto.url }}" alt="foto de la habitacion" width="200">
+                {% if habitacion.foto %}
+                 <img src="{{ habitacion.foto.url }}" alt="foto de la habitacion" width="200">
+                {% else %}
+                 <p>No hay foto disponible</p>
+                {% endif %}
             </td>
             <td>{{ habitacion.nombre}}</td>
             <td>{{ habitacion.descripcion}}</td>
